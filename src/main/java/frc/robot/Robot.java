@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autonomousCommand = Autonomous.getInstance().getAutonomousCommand();
         if (autonomousCommand != null)
-            autonomousCommand.schedule();
+            CommandScheduler.getInstance().schedule(autonomousCommand); 
 
         CalculateReefTarget.initBlue();
         CalculateReefTarget.initRed();
