@@ -4,18 +4,21 @@
 
 package frc.robot;
 
+import frc.robot.commands.AutoCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.utils.CalculateReefTarget;
 import frc.robot.utils.Constants.AutoConstants;
 import frc.robot.utils.Logger;
-
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.utils.TunableConstant;
 
@@ -75,7 +78,13 @@ public class Robot extends TimedRobot {
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
-        autonomousCommand = Autonomous.getInstance().getAutonomousCommand();
+        // autonomousCommand = Autonomous.getInstance().getAutonomousCommand();
+        autonomousCommand = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Translation2d(0, 0));
+            }),
+            new AutoCommand()
+        );
         if (autonomousCommand != null)
             CommandScheduler.getInstance().schedule(autonomousCommand); 
 
