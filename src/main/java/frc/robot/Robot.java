@@ -78,13 +78,13 @@ public class Robot extends TimedRobot {
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
-        // autonomousCommand = Autonomous.getInstance().getAutonomousCommand();
-        autonomousCommand = new SequentialCommandGroup(
-            new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Translation2d(0, 0));
-            }),
-            new AutoCommand()
-        );
+        autonomousCommand = Autonomous.getInstance().getAutonomousCommand();
+        // autonomousCommand = new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         Drivetrain.getInstance().setStartingPose(new Translation2d(0, 0));
+        //     }),
+        //     new AutoCommand()
+        // );
         if (autonomousCommand != null)
             CommandScheduler.getInstance().schedule(autonomousCommand); 
 

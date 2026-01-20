@@ -77,6 +77,6 @@ public class AutoCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return pathCommand.isFinished();
     }
 }

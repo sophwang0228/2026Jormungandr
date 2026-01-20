@@ -6,6 +6,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AlignToHPBasisVector;
 import frc.robot.commands.AlignToReefBasisVector;
+import frc.robot.commands.AutoCommand;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Superstructure;
@@ -30,12 +33,24 @@ import frc.robot.utils.Logger;
 public class Autonomous {
 
     private static Autonomous autonomous;
+    private SendableChooser<Command> autoChooser;
+    private SendableChooser<Double> autoStartPosition;
 
     public static Autonomous getInstance() {
         if (autonomous == null)
             autonomous = new Autonomous();
         return autonomous;
     }
+
+    private Command command = new SequentialCommandGroup(
+        new InstantCommand(() -> {
+            Drivetrain.getInstance().setStartingPose(new Translation2d(0, 0));
+        }),
+        new AutoCommand()
+        //new ShootFuelCommand()
+        //new PassTrenchCommand(),
+
+    );
 
     private Autonomous() {
         Drivetrain drivetrain = Drivetrain.getInstance();
@@ -70,9 +85,27 @@ public class Autonomous {
             },
             drivetrain // Reference to this subsystem to set requirements
         );
+
+
+
+        autoChooser = new SendableChooser<>();
+
+
+        autoChooser.setDefaultOption("1AutoCommand", command);
+
+        SmartDashboard.putData("Auto Routines", autoChooser);
+
+        autoStartPosition = new SendableChooser<>();
+        autoStartPosition.setDefaultOption("1anywhere", 0.0);
+
+        SmartDashboard.putData("Auto Starting Position", autoStartPosition);
+    }
+
+    public Command getAutonomousCommand(){
+        return autoChooser.getSelected();
     }
 
     public double getStartHeading() {
-        return 0;
+        return autoStartPosition.getSelected();
     }
 }

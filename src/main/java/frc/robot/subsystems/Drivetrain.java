@@ -430,7 +430,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * Resets gyro and sets robot's position to said pose including both rotation and translation
      * 
-     * @param pose - Pose 2D
+     * @param pose - Translation -- yes, I know it should be Pose2d, but I don't want to supply rotation. That comes from the dashboard
      */
     public void setStartingPose(Translation2d pose) {
         // degrees
