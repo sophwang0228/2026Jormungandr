@@ -28,6 +28,7 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -219,6 +220,8 @@ public class Drivetrain extends SubsystemBase {
      * @param robotRelativeSpeeds
      */
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+        System.err.println("DRIVE ROBOT RELATIVE time " + Timer.getFPGATimestamp() + " " + robotRelativeSpeeds.vxMetersPerSecond + " " + robotRelativeSpeeds.vyMetersPerSecond + " rot " + robotRelativeSpeeds.omegaRadiansPerSecond);
+        // SmartDashboard.putNumber(robotRelativeSpeeds.vxMetersPerSecond
         swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(robotRelativeSpeeds);
         setSwerveModuleStates(swerveModuleStates);
     }

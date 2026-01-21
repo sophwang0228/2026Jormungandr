@@ -24,25 +24,26 @@ import frc.robot.subsystems.Superstructure.SuperstructureState;
 import frc.robot.utils.DriverOI;
 import frc.robot.utils.DriverOI.DPadDirection;
 
-public class AutoCommand extends Command {
+public class AutoDriveCommand extends Command {
 
     private Drivetrain drivetrain;
     private DriverOI oi;
     private Command pathCommand;
 
-    public AutoCommand() {
+    public AutoDriveCommand(List<Pose2d> poseList, PathConstraints constraints) {
         drivetrain = Drivetrain.getInstance();
 
         // Create a list of waypoints from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)),
-            new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0))
+            poseList
+            // new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)),
+            // new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0))
             // new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
             // new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
         );
 
-        PathConstraints constraints = new PathConstraints(3.0, 4.0, Math.PI, Math.PI); // The constraints for this path.
+        //PathConstraints constraints = new PathConstraints(3.0, 4.0, Math.PI, Math.PI); // The constraints for this path.
         // PathConstraints constraints = new PathConstraints(1.0, 1.0, Math.PI, Math.PI); // The constraints for this path.
         // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
 
@@ -55,7 +56,7 @@ public class AutoCommand extends Command {
         );
 
 
-
+        
         // Prevent the path from being flipped if the coordinates are already correct
         path.preventFlipping = false;
 
