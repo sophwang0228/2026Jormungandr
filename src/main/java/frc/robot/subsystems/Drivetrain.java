@@ -214,14 +214,22 @@ public class Drivetrain extends SubsystemBase {
         setSwerveModuleStates(swerveModuleStates);
     }
 
+    double currentHeadingDirection = 0;
+    public double getRotationOverride() {
+        return 5 * currentHeadingDirection;
+    }
+
     /**
      * Only used during autonomous, sets driving strictly to robot relative
      * 
      * @param robotRelativeSpeeds
      */
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-        System.err.println("DRIVE ROBOT RELATIVE time " + Timer.getFPGATimestamp() + " " + robotRelativeSpeeds.vxMetersPerSecond + " " + robotRelativeSpeeds.vyMetersPerSecond + " rot " + robotRelativeSpeeds.omegaRadiansPerSecond);
+        // System.err.println("DRIVE ROBOT RELATIVE time " + Timer.getFPGATimestamp() + " " + robotRelativeSpeeds.vxMetersPerSecond + " " + robotRelativeSpeeds.vyMetersPerSecond + " rot " + robotRelativeSpeeds.omegaRadiansPerSecond);
         // SmartDashboard.putNumber(robotRelativeSpeeds.vxMetersPerSecond
+
+        currentHeadingDirection = Math.atan2(robotRelativeSpeeds.vyMetersPerSecond, robotRelativeSpeeds.vxMetersPerSecond);
+
         swerveModuleStates = DriveConstants.kKinematics.toSwerveModuleStates(robotRelativeSpeeds);
         setSwerveModuleStates(swerveModuleStates);
     }
@@ -435,25 +443,16 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @param pose - Translation -- yes, I know it should be Pose2d, but I don't want to supply rotation. That comes from the dashboard
      */
-    public void setStartingPose(Translation2d pose) {
-        // degrees
-        double start = Autonomous.getInstance().getStartHeading();
-        
+    public void setStartingPose(Pose2d pose) {        
         // want degrees
-        gyro.setYaw(start);
+        gyro.setYaw(pose.getRotation().getDegrees());
 
-        double x = pose.getX(), y = pose.getY();
         if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            x = 17.55 - x;
-            y = 8.05 - y;
+            pose = new Pose2d(17.55 - pose.getX(), 8.05 - pose.getY(), pose.getRotation());
         }
 
         // want radians
-        odometry.resetPosition(
-            new Rotation2d(Math.toRadians(start)),
-            swerveModulePositions,
-            new Pose2d(x, y, new Rotation2d(Math.toRadians(start)))
-        );
+        odometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
     }
 
     /**

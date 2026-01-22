@@ -87,6 +87,8 @@ public class RobotContainer {
 
         drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
+        SmartDashboard.putNumber("desired snake heading", 0);
+
         SmartDashboard.putBoolean("Align: Smart Target Finding", true);
         SmartDashboard.putBoolean("Align: Auto Score", true);
         SmartDashboard.putBoolean("Align: Auto Prep", true);

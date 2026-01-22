@@ -25,12 +25,10 @@ import frc.robot.utils.DriverOI;
 import frc.robot.utils.DriverOI.DPadDirection;
 
 public class AutoDriveCommand extends Command {
-
     private Drivetrain drivetrain;
-    private DriverOI oi;
     private Command pathCommand;
 
-    public AutoDriveCommand(List<Pose2d> poseList, PathConstraints constraints) {
+    public AutoDriveCommand(List<Pose2d> poseList, PathConstraints constraints, IdealStartingState start, GoalEndState end) {
         drivetrain = Drivetrain.getInstance();
 
         // Create a list of waypoints from poses. Each pose represents one waypoint.
@@ -48,15 +46,8 @@ public class AutoDriveCommand extends Command {
         // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
 
         // Create the path using the waypoints created above
-        PathPlannerPath path = new PathPlannerPath(
-            waypoints,
-            constraints,
-            new IdealStartingState(0, new Rotation2d(0)), // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-            new GoalEndState(0.0, new Rotation2d(0)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        );
+        PathPlannerPath path = new PathPlannerPath(waypoints, constraints, start, end);
 
-
-        
         // Prevent the path from being flipped if the coordinates are already correct
         path.preventFlipping = false;
 
