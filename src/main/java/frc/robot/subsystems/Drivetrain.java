@@ -448,7 +448,7 @@ public class Drivetrain extends SubsystemBase {
         gyro.setYaw(pose.getRotation().getDegrees());
 
         if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            pose = new Pose2d(17.55 - pose.getX(), 8.05 - pose.getY(), pose.getRotation());
+            pose = new Pose2d(16.54 - pose.getX(), 8.07 - pose.getY(), pose.getRotation());
         }
 
         // want radians

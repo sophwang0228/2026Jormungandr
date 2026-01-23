@@ -7,6 +7,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
@@ -110,76 +111,106 @@ public class Autonomous {
 
         Command autoCommand = new SequentialCommandGroup(
             new InstantCommand(() -> {
-                PPHolonomicDriveController.overrideRotationFeedback(() -> {
-                    return 0;
-                });
-                Drivetrain.getInstance().setStartingPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-            }),
-            new AutoCommand()
-            //new ShootFuelCommand()
-            //new PassTrenchCommand(),
-
-        );
-
-        Command outpostAuto = new SequentialCommandGroup(
-            new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(-90)));
+                Drivetrain.getInstance().setStartingPose(new Pose2d(1, 0, Rotation2d.fromDegrees(0)));
             }),
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(0)), 
-                    new Pose2d(0.584,0.664, Rotation2d.fromDegrees(0))
-                ),
-                new PathConstraints(2, 4, Math.PI, Math.PI),
-                // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
-            )
-        );
-
-
-        Command notsosquiggleAuto = new SequentialCommandGroup(
-            new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(180)));
-                startSnakeDrive();
-            }),
-            new AutoDriveCommand(
-                List.of(
-                    new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(175.355)), 
-                    new Pose2d(2.202,2.735, Rotation2d.fromDegrees(100.909)),
-                    new Pose2d(2.034,5.297, Rotation2d.fromDegrees(90))
-                ),
-                new PathConstraints(1, 1, 6 * Math.PI, 8 * Math.PI),
-                // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
-            )
-        );
-
-        Command squiggleAuto = new SequentialCommandGroup(
-            new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(180)));
-                startSnakeDrive();
-            }),
-            new AutoDriveCommand(
-                List.of(
-                    new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(149.577)), 
-                    new Pose2d(2.034,2.541, Rotation2d.fromDegrees(42.614)),
-                    new Pose2d(2.771,3.912, Rotation2d.fromDegrees(81.251)),
-                    new Pose2d(2.034,5.297, Rotation2d.fromDegrees(77.259))
+                    new Pose2d(1, 0, Rotation2d.fromDegrees(180)), 
+                    new Pose2d(0, 0, Rotation2d.fromDegrees(180))
                 ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
                 new GoalEndState(0, Rotation2d.fromDegrees(0))
             )
+
         );
+
+        // Command rightOutDepClimbAuto = new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)));
+        //         startSnakeDrive();
+        //     }),
+        //     new AutoDriveCommand(
+        //         List.of(
+        //             new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)), 
+        //             new Pose2d(1.257, 0.639, Rotation2d.fromDegrees(180.000)),
+        //             new Pose2d(2.380, 3.729, Rotation2d.fromDegrees(61.557)),
+        //             new Pose2d(1.257, 5.882, Rotation2d.fromDegrees(156.038)),
+        //             new Pose2d(1.069, 4.702, Rotation2d.fromDegrees(-59.534))
+        //         ),
+        //         List.of(
+        //             new EventMarker("Stop snake drive", 2.42, new InstantCommand(() -> stopSnakeDrive()))
+        //         ),
+        //         new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+        //         // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
+        //         new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+        //         new GoalEndState(0, Rotation2d.fromDegrees(180))
+        //     )
+        // );
+
+
+        
+
+        // Command outpostAuto = new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(-90)));
+        //     }),
+        //     new AutoDriveCommand(
+        //         List.of(
+        //             new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(0)), 
+        //             new Pose2d(0.584,0.664, Rotation2d.fromDegrees(0))
+        //         ),
+        //         new PathConstraints(2, 4, Math.PI, Math.PI),
+        //         // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
+        //         new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+        //         new GoalEndState(0, Rotation2d.fromDegrees(0))
+        //     )
+        // );
+
+
+        // Command notsosquiggleAuto = new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(180)));
+        //         startSnakeDrive();
+        //     }),
+        //     new AutoDriveCommand(
+        //         List.of(
+        //             new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(175.355)), 
+        //             new Pose2d(2.202,2.735, Rotation2d.fromDegrees(100.909)),
+        //             new Pose2d(2.034,5.297, Rotation2d.fromDegrees(90))
+        //         ),
+        //         new PathConstraints(1, 1, 6 * Math.PI, 8 * Math.PI),
+        //         // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
+        //         new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+        //         new GoalEndState(0, Rotation2d.fromDegrees(0))
+        //     )
+        // );
+
+        // Command squiggleAuto = new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(180)));
+        //         startSnakeDrive();
+        //     }),
+        //     new AutoDriveCommand(
+        //         List.of(
+        //             new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(149.577)), 
+        //             new Pose2d(2.034,2.541, Rotation2d.fromDegrees(42.614)),
+        //             new Pose2d(2.771,3.912, Rotation2d.fromDegrees(81.251)),
+        //             new Pose2d(2.034,5.297, Rotation2d.fromDegrees(77.259))
+        //         ),
+        //         new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+        //         // new PathConstraints(3.0, 4.0, 3 * Math.PI, 4 * Math.PI),
+        //         new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+        //         new GoalEndState(0, Rotation2d.fromDegrees(0))
+        //     )
+        // );
 
 
         autoChooser.setDefaultOption("1AutoCommand", autoCommand);
-        autoChooser.setDefaultOption("Outpost", outpostAuto);
-        autoChooser.setDefaultOption("Squiggle", squiggleAuto);
-        autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);
+        // autoChooser.setDefaultOption("R - Outpost/Depot/Climb Auto", rightOutDepClimbAuto);
+        // autoChooser.setDefaultOption("Outpost", outpostAuto);
+        // autoChooser.setDefaultOption("Squiggle", squiggleAuto);
+        // autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);
 
         SmartDashboard.putData("Auto Routines", autoChooser);
 
