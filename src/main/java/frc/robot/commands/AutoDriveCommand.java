@@ -70,54 +70,46 @@ public class AutoDriveCommand extends Command {
         Rotation2d rot = end.rotation();
         return new GoalEndState(end.velocityMPS(), rot.plus(Rotation2d.fromDegrees(180)));
     }
-
-    // public AutoDriveCommand(List<Pose2d> poseList, List<RotationTarget> holonomicRotations, List<PointTowardsZone> pointTowardsZones, List<ConstraintsZone> constraintZones, List<EventMarker> eventMarkers, PathConstraints constraints, IdealStartingState start, GoalEndState end) {
-    //     drivetrain = Drivetrain.getInstance();
-    //     List<Waypoint> waypoints = generateWaypoints(poseList);
-    //     PathPlannerPath path = new PathPlannerPath(
-    //         waypoints,
-    //         holonomicRotations,
-    //         pointTowardsZones,
-    //         constraintZones,
-    //         eventMarkers,
-    //         constraints,
-    //         start,
-    //         end,
-    //         false
-    //     );
-    //     path.preventFlipping = true;
-
-    //     pathCommand = AutoBuilder.followPath(path);
-
-    //     addRequirements(drivetrain);
-    // }
-
-    // public AutoDriveCommand(List<Pose2d> poseList, List<EventMarker> eventMarkers, PathConstraints constraints, IdealStartingState start, GoalEndState end) {
-    //     drivetrain = Drivetrain.getInstance();
-    //     List<Waypoint> waypoints = generateWaypoints(poseList);
-    //     PathPlannerPath path = new PathPlannerPath(
-    //         waypoints,
-    //         Collections.emptyList(),
-    //         Collections.emptyList(),
-    //         Collections.emptyList(),
-    //         eventMarkers,
-    //         constraints,
-    //         start,
-    //         end,
-    //         false
-    //     );
-    //     path.preventFlipping = true;
-
-    //     pathCommand = AutoBuilder.followPath(path);
-
-    //     addRequirements(drivetrain);
-    // }
-
-    public AutoDriveCommand(List<Pose2d> poseList, PathConstraints constraints, IdealStartingState start, GoalEndState end) {
-        drivetrain = Drivetrain.getInstance();
         
+    List<RotationTarget> getHolonomicRotationsBlue(List<RotationTarget> holonomicRotations) {
+        return holonomicRotations;
+    }
+
+    List<RotationTarget> getHolonomicRotationsRed(List<RotationTarget> holonomicRotations){
+        List<RotationTarget> flippedRotations = new ArrayList<>();
+        for (RotationTarget holonomicRotation : holonomicRotations) {
+            Rotation2d newRotation = holonomicRotation.rotation().plus(Rotation2d.fromDegrees(180));
+            flippedRotations.add(new RotationTarget(holonomicRotation.position(), newRotation));
+        }
+        return flippedRotations;
+    }
+
+    private void generatePaths(
+        List<Pose2d> poseList,
+        List<RotationTarget> holonomicRotations,
+        List<ConstraintsZone> constraintZones,
+        List<EventMarker> eventMarkers,
+        PathConstraints constraints,
+        IdealStartingState start,
+        GoalEndState end
+    ) {
+        drivetrain = Drivetrain.getInstance();
+
         List<Waypoint> waypointsBlue = generateWaypointsBlue(poseList);
         List<Waypoint> waypointsRed = generateWaypointsRed(poseList);
+
+        List<RotationTarget> holonomicRotationsBlue, holonomicRotationsRed;
+        if (holonomicRotations == null)
+            holonomicRotationsBlue = holonomicRotationsRed = Collections.emptyList();
+        else {
+            holonomicRotationsBlue = getHolonomicRotationsBlue(holonomicRotations);
+            holonomicRotationsRed = getHolonomicRotationsRed(holonomicRotations);
+        }
+
+        if (constraintZones == null)
+            constraintZones = Collections.emptyList();
+        if (eventMarkers == null)
+            eventMarkers = Collections.emptyList();
 
         IdealStartingState startBlue = getIdealStartingStateBlue(start);
         IdealStartingState startRed = getIdealStartingStateRed(start);
@@ -125,15 +117,55 @@ public class AutoDriveCommand extends Command {
         GoalEndState endBlue = getGoalEndStateBlue(end);
         GoalEndState endRed = getGoalEndStateRed(end);
 
-        PathPlannerPath pathBlue = new PathPlannerPath(waypointsBlue, constraints, startBlue, endBlue);
-        PathPlannerPath pathRed = new PathPlannerPath(waypointsRed, constraints, startRed, endRed);
+        PathPlannerPath pathBlue = new PathPlannerPath(
+            waypointsBlue,
+            holonomicRotationsBlue,
+            Collections.emptyList(),
+            constraintZones,
+            eventMarkers,
+            constraints,
+            startBlue,
+            endBlue,
+            false
+        );
+        PathPlannerPath pathRed = new PathPlannerPath(
+            waypointsRed,
+            holonomicRotationsRed,
+            Collections.emptyList(),
+            constraintZones,
+            eventMarkers,
+            constraints,
+            startRed,
+            endRed,
+            false
+        );
 
-        pathBlue.preventFlipping = true;
-        pathRed.preventFlipping = true;
+        pathBlue.preventFlipping = pathRed.preventFlipping = true;
 
         pathCommandBlue = AutoBuilder.followPath(pathBlue);
         pathCommandRed = AutoBuilder.followPath(pathRed);
-        
+    }
+
+    public AutoDriveCommand(
+        List<Pose2d> poseList,
+        PathConstraints constraints,
+        IdealStartingState start,
+        GoalEndState end) {
+        drivetrain = Drivetrain.getInstance();
+
+        generatePaths(poseList, null, null, null, constraints, start, end);
+        addRequirements(drivetrain);
+    }
+
+    public AutoDriveCommand(
+        List<Pose2d> poseList,
+        List<EventMarker> eventMarkers,
+        PathConstraints constraints,
+        IdealStartingState start,
+        GoalEndState end
+    ) {
+        drivetrain = Drivetrain.getInstance();
+        generatePaths(poseList, null, null, eventMarkers, constraints, start, end);
         addRequirements(drivetrain);
     }
 

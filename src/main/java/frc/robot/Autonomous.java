@@ -118,6 +118,30 @@ public class Autonomous {
                     new Pose2d(1, 0, Rotation2d.fromDegrees(180)), 
                     new Pose2d(0, 0, Rotation2d.fromDegrees(180))
                 ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4* Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            )
+
+        );
+
+        Command rightOutDepClimbAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)));
+                startSnakeDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)), 
+                    new Pose2d(1.257, 0.639, Rotation2d.fromDegrees(180.000)),
+                    new Pose2d(2.380, 3.729, Rotation2d.fromDegrees(61.557)),
+                    new Pose2d(1.257, 5.882, Rotation2d.fromDegrees(156.038)),
+                    new Pose2d(1.069, 4.702, Rotation2d.fromDegrees(-59.534))
+                ),
+                List.of(
+                    new EventMarker("Stop snake drive", 2.42, new InstantCommand(() -> stopSnakeDrive()))
+                ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
                 new GoalEndState(0, Rotation2d.fromDegrees(0))
@@ -207,7 +231,7 @@ public class Autonomous {
 
 
         autoChooser.setDefaultOption("1AutoCommand", autoCommand);
-        // autoChooser.setDefaultOption("R - Outpost/Depot/Climb Auto", rightOutDepClimbAuto);
+        autoChooser.setDefaultOption("R - Outpost/Depot/Climb Auto", rightOutDepClimbAuto);
         // autoChooser.setDefaultOption("Outpost", outpostAuto);
         // autoChooser.setDefaultOption("Squiggle", squiggleAuto);
         // autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);
