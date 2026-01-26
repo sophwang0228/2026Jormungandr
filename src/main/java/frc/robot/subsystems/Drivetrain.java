@@ -216,7 +216,7 @@ public class Drivetrain extends SubsystemBase {
 
     double currentHeadingDirection = 0;
     public double getRotationOverride() {
-        return 5 * currentHeadingDirection;
+        return 3 * currentHeadingDirection;
     }
 
     /**

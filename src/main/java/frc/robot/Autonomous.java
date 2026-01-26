@@ -111,22 +111,22 @@ public class Autonomous {
 
         Command autoCommand = new SequentialCommandGroup(
             new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Pose2d(1, 0, Rotation2d.fromDegrees(0)));
+                Drivetrain.getInstance().setStartingPose(new Pose2d(1, 0, Rotation2d.fromDegrees(180)));
             }),
             new AutoDriveCommand(
                 List.of(
                     new Pose2d(1, 0, Rotation2d.fromDegrees(180)), 
                     new Pose2d(0, 0, Rotation2d.fromDegrees(180))
                 ),
-                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4* Math.PI),
+                new PathConstraints(0.5, 0.5, Math.PI, Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(90))
             )
 
         );
 
-        Command rightOutDepClimbAuto = new SequentialCommandGroup(
+        Command rightOutDepClimbLAuto = new SequentialCommandGroup(
             new InstantCommand(() -> {
                 Drivetrain.getInstance().setStartingPose(new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)));
                 startSnakeDrive();
@@ -145,6 +145,27 @@ public class Autonomous {
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
                 new GoalEndState(0, Rotation2d.fromDegrees(0))
+            )
+
+        );
+
+
+        Command leftDepOutClimbRAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(3.560, 5.853, Rotation2d.fromDegrees(180)));
+                //startSnakeDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(3.560, 5.853, Rotation2d.fromDegrees(180)), 
+                    new Pose2d(0.960, 6.008, Rotation2d.fromDegrees(-159.829)),
+                    new Pose2d(2.448, 3.550, Rotation2d.fromDegrees(-83.367)),
+                    new Pose2d(0.791, 1.053, Rotation2d.fromDegrees(92.651)),
+                    new Pose2d(1.076, 3.162, Rotation2d.fromDegrees(95.631))
+                ),
+                new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
             )
 
         );
@@ -231,7 +252,8 @@ public class Autonomous {
 
 
         autoChooser.setDefaultOption("1AutoCommand", autoCommand);
-        autoChooser.setDefaultOption("R - Outpost/Depot/Climb Auto", rightOutDepClimbAuto);
+        autoChooser.setDefaultOption("R - Outpost/Depot/Left Climb Auto", rightOutDepClimbLAuto);
+        autoChooser.setDefaultOption("L - Depost/Outpost/Right Climb Auto", leftDepOutClimbRAuto);
         // autoChooser.setDefaultOption("Outpost", outpostAuto);
         // autoChooser.setDefaultOption("Squiggle", squiggleAuto);
         // autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);

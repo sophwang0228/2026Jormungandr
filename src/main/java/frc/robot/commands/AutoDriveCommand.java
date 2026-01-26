@@ -152,7 +152,6 @@ public class AutoDriveCommand extends Command {
         IdealStartingState start,
         GoalEndState end) {
         drivetrain = Drivetrain.getInstance();
-
         generatePaths(poseList, null, null, null, constraints, start, end);
         addRequirements(drivetrain);
     }
