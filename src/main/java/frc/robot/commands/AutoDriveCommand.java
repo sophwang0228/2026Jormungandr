@@ -168,6 +168,19 @@ public class AutoDriveCommand extends Command {
         addRequirements(drivetrain);
     }
 
+    public AutoDriveCommand(
+        List<Pose2d> poseList,
+        List<RotationTarget> holonomicRotations,
+        List<EventMarker> eventMarkers,
+        PathConstraints constraints,
+        IdealStartingState start,
+        GoalEndState end
+    ) {
+        drivetrain = Drivetrain.getInstance();
+        generatePaths(poseList, holonomicRotations, null, eventMarkers, constraints, start, end);
+        addRequirements(drivetrain);
+    }
+
     @Override
     public void initialize() {
         pathCommand = (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == Alliance.Blue) ? pathCommandBlue : pathCommandRed;

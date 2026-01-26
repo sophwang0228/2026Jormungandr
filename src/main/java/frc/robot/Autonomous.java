@@ -170,6 +170,29 @@ public class Autonomous {
 
         );
 
+        Command crazyWeirdAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(180)));
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(124.306)), 
+                    new Pose2d(2.034, 2.541, Rotation2d.fromDegrees(91.449)),
+                    new Pose2d(2.771, 3.912, Rotation2d.fromDegrees(81.251)),
+                    new Pose2d(2.304, 5.297, Rotation2d.fromDegrees(77.259))
+                ),
+                List.of(
+                    //add rotation target / holonomic rotations code!!!
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-90))
+            )
+
+        );
+
+
         // Command rightOutDepClimbAuto = new SequentialCommandGroup(
         //     new InstantCommand(() -> {
         //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)));
