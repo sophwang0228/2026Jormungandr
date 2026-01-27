@@ -526,6 +526,11 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Drivetrain Current Velocity", getDrivetrainCurrentVelocity());
 
+        SmartDashboard.putNumber("DriveTrain Pose Rotation", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("DriveTrain Pose X Translation ", getPose().getX());
+        SmartDashboard.putNumber("DriveTrain Pose Y Translation", getPose().getY());
+
+
         // SmartDashboard.putBoolean("skid", isSkidding());
         updateModulePositions();
         updateOdometry();
