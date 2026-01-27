@@ -121,7 +121,7 @@ public class Autonomous {
                 new PathConstraints(0.5, 0.5, Math.PI, Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                new GoalEndState(0, Rotation2d.fromDegrees(90))
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
             )
 
         );

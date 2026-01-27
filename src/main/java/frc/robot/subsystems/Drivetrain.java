@@ -53,7 +53,7 @@ public class Drivetrain extends SubsystemBase {
     private double currentDrivetrainSpeed = 0;
 
     private final Pigeon2 gyro;
-    private double heading, autoAdjustHeading;
+    private double heading;
 
     private final Field2d fusedOdometry;
     private final StructPublisher<Pose2d> fusedOdometryAdvScope, pureOdometryAdvScope;
@@ -89,7 +89,6 @@ public class Drivetrain extends SubsystemBase {
 
         gyro = new Pigeon2(RobotMap.GYRO_ID, canivore);
         gyro.setYaw(0);
-        autoAdjustHeading = 0.0;
 
         swerveModulePositionsRadians = new double[]{
             frontLeftModule.getPositionRadians(), frontRightModule.getPositionRadians(),
@@ -317,7 +316,6 @@ public class Drivetrain extends SubsystemBase {
      * resets gyro
      */
     public void resetGyro() {
-        autoAdjustHeading = 0.0;
         gyro.reset();
     }
 
@@ -382,10 +380,6 @@ public class Drivetrain extends SubsystemBase {
         );
     }
 
-    public void setAutoAdjustHeading(double angleOffset){
-        autoAdjustHeading = angleOffset;
-    }
-
     public double getDrivetrainCurrentVelocity(){
         //gets rotational velocity of the whole robot
         double currentRotationalVelocity = -getRotationalVelocity()*2*Math.PI/360;
@@ -430,7 +424,13 @@ public class Drivetrain extends SubsystemBase {
      * @return returns current pose as a pose2d, which containts both translational and rotational
      */
     public Pose2d getPose() {
-        return odometry.getEstimatedPosition();
+        Pose2d odometryPose = odometry.getEstimatedPosition();
+        return new Pose2d(
+            odometryPose.getX(),
+            odometryPose.getY(),
+            Rotation2d.fromDegrees(getHeadingBlue())
+        );
+        // return odometry.getEstimatedPosition();
     }
 
     public void setPose(Pose2d pose) {
@@ -440,8 +440,6 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * Resets gyro and sets robot's position to said pose including both rotation and translation
-     * 
-     * @param pose - Translation -- yes, I know it should be Pose2d, but I don't want to supply rotation. That comes from the dashboard
      */
     public void setStartingPose(Pose2d pose) {        
         // want degrees
