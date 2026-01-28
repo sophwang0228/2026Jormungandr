@@ -163,7 +163,9 @@ public class Autonomous {
                     new Pose2d(0.791, 1.053, Rotation2d.fromDegrees(92.651)),
                     new Pose2d(1.076, 3.162, Rotation2d.fromDegrees(95.631))
                 ),
-                new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+
+                //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(180)),
                 new GoalEndState(0, Rotation2d.fromDegrees(180))
             )
