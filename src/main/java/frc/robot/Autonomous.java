@@ -224,7 +224,7 @@ public class Autonomous {
                 List.of(
                     new Pose2d(1.400, 5.950, Rotation2d.fromDegrees(0)),
                     new Pose2d(1.801, 3.071, Rotation2d.fromDegrees(-100.222)),
-                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(92.651)),
+                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(92.651))
                     
                 ),
                 new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
