@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -216,7 +217,15 @@ public class Autonomous {
                 List.of(
                     new Pose2d(4.427, 7.297, Rotation2d.fromDegrees(0)), 
                     new Pose2d(7.636, 6.448, Rotation2d.fromDegrees(-66.501)),
-                    new Pose2d(7.752, 2.062, Rotation2d.fromDegrees(-71.147)),
+                    new Pose2d(7.878, 1.324, Rotation2d.fromDegrees(-71.147))
+                ),
+                new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            ),
+            //TODO: add turn 180 command!!
+            new AutoDriveCommand(
+                List.of(
                     new Pose2d(8.024, 6.616, Rotation2d.fromDegrees(117.255)),
                     new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(179.409)),
                     new Pose2d(1.05, 4.675, Rotation2d.fromDegrees(-112.380))
@@ -224,6 +233,7 @@ public class Autonomous {
                 List.of(
                     new EventMarker("Stop Snake Drive", 4, new InstantCommand(() -> stopSnakeDrive())),
                     new EventMarker("Stop Passing", 2.07, new InstantCommand(() -> stopPassDrive()))
+                    
                 ), 
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
@@ -390,6 +400,108 @@ public class Autonomous {
                 new GoalEndState(0, Rotation2d.fromDegrees(0))
             )
             );
+            
+            Command leftMidPass = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(0)));
+                startSnakeDrive();
+                startPassDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(0)), 
+                    new Pose2d(7.636, 6.448, Rotation2d.fromDegrees(-66.501)),
+                    new Pose2d(7.878, 0.696, Rotation2d.fromDegrees(-71.147)),
+                    new Pose2d(7.878, 7.045, Rotation2d.fromDegrees(117.255)), 
+                    new Pose2d(7.476, 3.633, Rotation2d.fromDegrees(-91.146)),
+                    new Pose2d(8.105, 0.994, Rotation2d.fromDegrees(70.602)),
+                    new Pose2d(7.878, 7.045, Rotation2d.fromDegrees(95.464)), 
+                    new Pose2d(7.878, 0.696, Rotation2d.fromDegrees(-66.879)),
+                    new Pose2d(7.054, 7.509, Rotation2d.fromDegrees(-163.009))
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            )
+        );
+            
+            
+        Command leftDepoMidLeftClimb = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(3.547, 6.021, Rotation2d.fromDegrees(180)));
+                startPassDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(3.547, 6.021, Rotation2d.fromDegrees(180)),
+                    new Pose2d(1.48, 5.959, Rotation2d.fromDegrees(180))
+                ),
+                List.of(
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            ),
+            new WaitCommand(0.5),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(2.879, 6.436, Rotation2d.fromDegrees(45.556)),
+                    new Pose2d(4.353, 7.385, Rotation2d.fromDegrees(-2.694)),
+                    new Pose2d(7.683, 6.436, Rotation2d.fromDegrees(-83.581)), 
+                    new Pose2d(7.806, 0.943, Rotation2d.fromDegrees(-69.928)),
+                    new Pose2d(7.301, 7.003, Rotation2d.fromDegrees(157.574)),
+                    new Pose2d(4.353, 7.488, Rotation2d.fromDegrees(-176.634)), 
+                    new Pose2d(1.076, 4.675, Rotation2d.fromDegrees(-107.966))
+                ),
+                List.of(
+                    new EventMarker("Stop Snake Drive", 5.28)
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            )
+        );
+
+
+        Command rightOutMidPassRightClimbAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(3.615, 0.626, Rotation2d.fromDegrees(180)));
+                startPassDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(3.615, 0.626, Rotation2d.fromDegrees(180)),
+                    new Pose2d(0.719, 0.626, Rotation2d.fromDegrees(180))
+                ),
+                List.of(
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            ),
+            new WaitCommand(2),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(5.833, 0.779, Rotation2d.fromDegrees(18.187)),
+                    new Pose2d(7.625, 1.740, Rotation2d.fromDegrees(79.051)),
+                    new Pose2d(7.806, 7.117, Rotation2d.fromDegrees(-69.928)), 
+                    new Pose2d(7.806, 1.074, Rotation2d.fromDegrees(-135.294)),
+                    new Pose2d(4.172, 0.626, Rotation2d.fromDegrees(-176.634)),
+                    new Pose2d(1.101, 2.866, Rotation2d.fromDegrees(83.387))
+                ),
+                List.of(
+                    new EventMarker("Stop Snake Drive", 5.28)
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            )
+        );
 
         // Command rightOutDepClimbAuto = new SequentialCommandGroup(
         //     new InstantCommand(() -> {
@@ -480,6 +592,9 @@ public class Autonomous {
         autoChooser.setDefaultOption("L - Mid/Outpost/Left Climb Auto", leftMidOutClimbRAuto);
         autoChooser.setDefaultOption("L - Depot/Outpost/Left Climb Auto", leftDepoOutpostLeftClimbAuto);
         autoChooser.setDefaultOption("L - Mid (Pass + Store)/Left Climb Auto", leftMidPassScoreClimbLAuto);
+        autoChooser.setDefaultOption("L - Pass Only Loop", leftMidPass);
+        autoChooser.setDefaultOption("L - Depot/Mid/Left Climb Auto", leftDepoMidLeftClimb);
+        autoChooser.setDefaultOption("R - Outpost/ Mid (Pass) + Right Climb Auto", rightOutMidPassRightClimbAuto);
         // autoChooser.setDefaultOption("Outpost", outpostAuto);
         // autoChooser.setDefaultOption("Squiggle", squiggleAuto);
         // autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);
