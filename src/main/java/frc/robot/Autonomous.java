@@ -147,6 +147,7 @@ public class Autonomous {
             new WaitCommand(.5),
             new AutoDriveCommand(
                 List.of(
+                    new Pose2d(0.960, 6.008, Rotation2d.fromDegrees(-159.829)),
                     new Pose2d(2.448, 3.550, Rotation2d.fromDegrees(-83.367)),
                     new Pose2d(0.791, 1.053, Rotation2d.fromDegrees(92.651)),
                     new Pose2d(1.076, 3.162, Rotation2d.fromDegrees(95.631))
@@ -173,6 +174,7 @@ public class Autonomous {
             new WaitCommand(.5), //wait at outpost
             new AutoDriveCommand(
                 List.of(
+                    new Pose2d(0.653, 0.685, Rotation2d.fromDegrees(127.694)),
                     new Pose2d(2.003, 4.272, Rotation2d.fromDegrees(104.342)),
                     new Pose2d(1.107, 5.890, Rotation2d.fromDegrees(-89.012)), 
                     new Pose2d(1.107, 4.839, Rotation2d.fromDegrees(-90.000))
@@ -201,6 +203,7 @@ public class Autonomous {
             new WaitCommand(0.5),
             new AutoDriveCommand(
                 List.of(
+                    new Pose2d(0.684, 0.623, Rotation2d.fromDegrees(147.995)),
                     new Pose2d(1.045, 2.664, Rotation2d.fromDegrees(57.933))
                 ),
                 new PathConstraints(1,1,Math.PI,Math.PI),

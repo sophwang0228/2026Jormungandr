@@ -14,6 +14,7 @@ public class LimelightFrontRight extends Limelight {
             llFrontRight = new LimelightFrontRight();
         return llFrontRight;
     }
+  
 
     @Override
     public void periodic() {

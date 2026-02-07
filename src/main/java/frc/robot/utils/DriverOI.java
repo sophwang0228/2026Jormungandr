@@ -23,6 +23,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commands.AlignToBarge;
 import frc.robot.commands.AlignToCage;
 import frc.robot.commands.AlignToHPBasisVector;
+import frc.robot.commands.AlignToHubBasisVector;
+import frc.robot.commands.AlignToHubBasisVectorTranslation;
 import frc.robot.commands.AlignToProcessor;
 import frc.robot.commands.AlignToReefBasisVector;
 import frc.robot.commands.DriveToPoint;
@@ -75,6 +77,7 @@ public class DriverOI {
         xButton.onTrue(new InstantCommand(() -> superstructure.requestState(SuperstructureState.STOW)));
 
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        squareButton.whileTrue(new AlignToHubBasisVector());
         // squareButton.onTrue(new ConditionalCommand(
         //     new TwitchClimb(false),
         //     new InstantCommand(() -> {
@@ -100,6 +103,7 @@ public class DriverOI {
         );
 
         Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+        triangleButton.whileTrue(new AlignToHubBasisVectorTranslation());
         // triangleButton.whileTrue(new SequentialCommandGroup(
         //     new DriveToPoint(6.953, 2.856, 120.0, 0.5),
         //     new AlignToReefBasisVector(
