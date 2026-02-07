@@ -3,36 +3,90 @@ package frc.robot.commands;
 import com.pathplanner.lib.config.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightFrontRight;
+import frc.robot.utils.Constants.HubAlignConstants;
 import frc.robot.utils.LimelightHelpers.LimelightTarget_Retro;
 
 public class AlignToHubBasisVector extends Command {
-    //private Limelight 
     private Drivetrain drivetrain;
-    private PIDController lateralPIDController, depthPIDController, rotationalPIDController;
-    private double lateralP, lateralI, lateralD, lateralFF, 
-    depthP, depthI, depthD, depthFF, 
+    private PIDController
+    // lateralPIDController, depthPIDController,
+    rotationalPIDController;
+    private double
+    // lateralP, lateralI, lateralD, lateralFF,
+    // depthP, depthI, depthD, depthFF,
     rotationalP, rotationalI, rotationalD, rotationalFF;
     private double rotationalLowerP; // lower P if error is small, since degrees have larger margin of error
-    private double lateralErrorThreshold, depthErrorThreshold, rotationalErrorThreshold, // determines when error is small enough
-    rotationalLowerPThreshold; // determines which rotationalP to use
+    private double
+    // lateralErrorThreshold, depthErrorThreshold,
+    rotationalErrorThreshold, // determines when error is small enough
+            rotationalLowerPThreshold; // determines which rotationalP to use
     private Limelight frontRLimelight;
+    private double tagAngle;
+    private double rotationalError;
 
     public AlignToHubBasisVector() {
+        drivetrain = Drivetrain.getInstance();
         frontRLimelight = LimelightFrontRight.getInstance();
-        rotationalP = 
+        // rotationalP = HubAlignConstants.kRotationalP;
+        // rotationalI = HubAlignConstants.kRotationalI;
+        // rotationalD = HubAlignConstants.kRotationalD;
+        // rotationalFF = HubAlignConstants.kRotationalFF;
+        // rotationalLowerP = HubAlignConstants.kRotationLowerP;
+        // rotationalErrorThreshold = HubAlignConstants.kRotationalErrorThreshold;
+        // rotationalLowerPThreshold = HubAlignConstants.kRotationLowerPThreshold;
+        SmartDashboard.putNumber("rotationalP", 0);
+        SmartDashboard.putNumber("rotationalI", 0);
+        SmartDashboard.putNumber("rotationalD", 0);
+        SmartDashboard.putNumber("rotationalFF", 0);
+        SmartDashboard.putNumber("rotationalLowerP", 0);
+        SmartDashboard.putNumber("rotationalErrorThreshold", 0);
+        SmartDashboard.putNumber("rotationalLowerPThreshold", 0);
+        SmartDashboard.putNumber("rotationalError", 0);
         rotationalPIDController = new PIDController(rotationalP, rotationalI, rotationalD);
+        addRequirements(drivetrain);
+        SmartDashboard.putNumber("Target April Tag ID", 0);
     }
 
     @Override
     public void initialize() {
+        // Pose2d tagPose = Limelight.getAprilTagPose((int)
+        // SmartDashboard.getNumber("Target April Tag ID", 0));
+        // tagAngle = tagPose.getRotation().getRadians();
+        tagAngle = 0;
+
+        rotationalP = SmartDashboard.getNumber("rotationalP", 0);
+        rotationalI = SmartDashboard.getNumber("rotationalI", 0);
+        rotationalD = SmartDashboard.getNumber("rotationalD", 0);
+        rotationalFF = SmartDashboard.getNumber("rotationalFF", 0);
+        rotationalLowerP = SmartDashboard.getNumber("rotationalLowerP", 0);
+        rotationalErrorThreshold = SmartDashboard.getNumber("rotationalErrorThreshold", 0);
+        rotationalLowerPThreshold = SmartDashboard.getNumber("rotationalLowerPThreshold", 0);
+        SmartDashboard.putNumber("rotationalError", rotationalError);
     }
 
     @Override
     public void execute() {
+        rotationalError = drivetrain.getHeadingBlue() - tagAngle;
+        if (Math.abs(rotationalError) > rotationalLowerPThreshold)
+            rotationalPIDController.setP(rotationalP);
+        else
+            rotationalPIDController.setP(rotationalLowerP);
+        rotationalPIDController.setI(rotationalI);
+        rotationalPIDController.setD(rotationalD);
+
+        double rotation = 0;
+        if (Math.abs(rotationalError) > rotationalErrorThreshold) {
+            rotation = rotationalPIDController.calculate(rotationalError) + Math.signum(rotationalError) * rotationalFF;
+        }
+
+        drivetrain.drive(new Translation2d(0, 0), rotation, true, null);
     }
 
     @Override
