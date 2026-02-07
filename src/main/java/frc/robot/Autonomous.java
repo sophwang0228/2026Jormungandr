@@ -14,6 +14,7 @@ import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPoint;
+import com.pathplanner.lib.path.RotationTarget;
 import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -524,6 +525,42 @@ public class Autonomous {
 
         );
 
+
+        Command choateAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(4.505, 7.587, Rotation2d.fromDegrees(16.928)));
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(4.505, 7.587, Rotation2d.fromDegrees(16.928)), 
+                    new Pose2d(8.605, 5.594, Rotation2d.fromDegrees(113.485)),
+                    new Pose2d(4.893, 7.406, Rotation2d.fromDegrees(-178.493)),
+                    new Pose2d(3.470, 7.406, Rotation2d.fromDegrees(-4.764)),
+                    new Pose2d(6.762, 7.270, Rotation2d.fromDegrees(-6.116)),
+                    new Pose2d(8.037, 4.378, Rotation2d.fromDegrees(-69.395)),
+                    new Pose2d(5.636, 7.406, Rotation2d.fromDegrees(174.336)),
+                    new Pose2d(2.926, 7.056, Rotation2d.fromDegrees(-143.276)),
+                    new Pose2d(1.620, 4.378, Rotation2d.fromDegrees(-129.174))
+                ),
+                List.of(
+                    new RotationTarget(1.87, Rotation2d.fromDegrees(-90)),
+                    new RotationTarget(2.3, Rotation2d.fromDegrees(-90)),
+                    new RotationTarget (3.61, Rotation2d.fromDegrees(-90)),
+                    new RotationTarget(5.9, Rotation2d.fromDegrees(-90)),
+                    new RotationTarget(6.66, Rotation2d.fromDegrees(-90))
+                ),
+                List.of(
+                    new EventMarker("Stop Snake Drive", 0.94),
+                    new EventMarker("Start Snake Drive", 4.17),
+                    new EventMarker("Stop Snake Drive", 5.23)
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
+            )
+        );
+
         // Command rightOutDepClimbAuto = new SequentialCommandGroup(
         //     new InstantCommand(() -> {
         //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)));
@@ -617,6 +654,7 @@ public class Autonomous {
         autoChooser.setDefaultOption("L - Depot/Mid/Left Climb Auto", leftDepoMidLeftClimb);
         autoChooser.setDefaultOption("R - Outpost/ Mid (Pass) + Right Climb Auto", rightOutMidPassRightClimbAuto);
         autoChooser.setDefaultOption("Test Turning", testTurningAuto);
+        autoChooser.setDefaultOption("Choate Trench Auto", choateAuto);
         // autoChooser.setDefaultOption("Outpost", outpostAuto);
         // autoChooser.setDefaultOption("Squiggle", squiggleAuto);
         // autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);
