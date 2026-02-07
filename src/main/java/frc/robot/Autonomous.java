@@ -391,7 +391,8 @@ public class Autonomous {
             new WaitCommand(2),
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(2.629, 3.938, Rotation2d.fromDegrees(138.674))
+                    new Pose2d(2.629, 3.938, Rotation2d.fromDegrees(138.674)),
+                    new Pose2d(1.089, 4.960, Rotation2d.fromDegrees(-150.593))
                 ),
 
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
@@ -503,6 +504,26 @@ public class Autonomous {
             )
         );
 
+
+        Command testTurningAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(7.765, 5.943, Rotation2d.fromDegrees(-90)));
+                startSnakeDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(7.765, 5.943, Rotation2d.fromDegrees(-90)), 
+                    new Pose2d(7.878, 2.359, Rotation2d.fromDegrees(-71.147)),
+                    new Pose2d(7.878, 6.125, Rotation2d.fromDegrees(-112.380))
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
+            )
+
+        );
+
         // Command rightOutDepClimbAuto = new SequentialCommandGroup(
         //     new InstantCommand(() -> {
         //         Drivetrain.getInstance().setStartingPose(new Pose2d(3.586, 0.639, Rotation2d.fromDegrees(180)));
@@ -595,6 +616,7 @@ public class Autonomous {
         autoChooser.setDefaultOption("L - Pass Only Loop", leftMidPass);
         autoChooser.setDefaultOption("L - Depot/Mid/Left Climb Auto", leftDepoMidLeftClimb);
         autoChooser.setDefaultOption("R - Outpost/ Mid (Pass) + Right Climb Auto", rightOutMidPassRightClimbAuto);
+        autoChooser.setDefaultOption("Test Turning", testTurningAuto);
         // autoChooser.setDefaultOption("Outpost", outpostAuto);
         // autoChooser.setDefaultOption("Squiggle", squiggleAuto);
         // autoChooser.setDefaultOption("Not Squiggle", notsosquiggleAuto);
